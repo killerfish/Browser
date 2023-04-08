@@ -20,7 +20,7 @@ There is also a custom input accessory view for the address bar, which displays 
 
 ## Functionality
 
-The app allows users to browse the internet by adding and removing tabs, navigating back, closing tabs, and running the Top Sites Addon. The WKWebView component is used to display web pages in the app.
+The app allows users to browse the internet by adding and removing tabs, navigating back, and running the Top Sites Addon. The WKWebView component is used to display web pages in the app.
 
 ### Top Sites Addon
 If the browser visits https://addons.mozilla.org/en-US/firefox/addon, the user agent is set as Firefox and the "Add to Firefox" button is updated to "Add to Orion" on page load.
