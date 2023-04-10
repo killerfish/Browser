@@ -121,7 +121,7 @@ extension AddOnController: WKScriptMessageHandler {
         let javascript = "logTopSites(\(topSitesJsonString ?? "[]"))"
         self.webView.evaluateJavaScript(javascript) { _, err in
           if let err = err {
-            print(err)
+            print(err) 
           }
         }
       }
