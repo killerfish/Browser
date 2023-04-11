@@ -190,34 +190,3 @@ extension WebViewController {
     urlField.resignFirstResponder()
   }
 }
-
-extension WebViewController: WKScriptMessageHandler {
-  func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-    
-    if message.name == "getTopSites" {
-      getMostVisitedSites { topSites in
-        let topSitesJson = try? JSONSerialization.data(withJSONObject: topSites, options: [])
-        let topSitesJsonString = String(data: topSitesJson!, encoding: .utf8)
-        let javascript = "logTopSites(\(topSitesJsonString ?? "[]"))"
-        self.webView.evaluateJavaScript(javascript, completionHandler: nil)
-      }
-    }
-  }
-}
-
-extension WebViewController {
-  func getMostVisitedSites(completion: @escaping ([URL]) -> Void) {
-    WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
-      var counts = [String: Int]()
-      
-      for record in records where record.dataTypes.contains(WKWebsiteDataTypeCookies) {
-        let url = record.displayName
-        counts[url, default: 0] += 1
-      }
-      
-      let topCounts = counts.sorted(by: { $0.value > $1.value }).prefix(10)
-      let urls = topCounts.compactMap { URL(string: "http://\($0.key)") }
-      completion(urls)
-    }
-  }
-}
