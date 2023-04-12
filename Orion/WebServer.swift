@@ -15,9 +15,11 @@ class WebServer {
   
   private init() {
     server["/*/:filename"] = { request in
-      let directoryUrl = self.unzipDirectory.deletingLastPathComponent()
-      let fileUrl = directoryUrl.appendingPathComponent(request.path)
-      let fileContents = try! String(contentsOf: fileUrl, encoding: .utf8)
+      var string = self.unzipDirectory.absoluteString
+      _ = string.removeLast()            
+      let url = URL(string: string)
+      let filePath = url!.appendingPathComponent(request.path)
+      let fileContents = try! String(contentsOf: filePath, encoding: .utf8)
       let contentType = request.path.hasSuffix(".js") ? "text/javascript" : "text/css"
         return .raw(200, "OK", ["Content-Type": contentType], { writer in
           try writer.write(fileContents.data(using: .utf8)!)

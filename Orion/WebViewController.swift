@@ -145,6 +145,10 @@ extension WebViewController: WKNavigationDelegate {
       }
     """
     
+    if let url = webView.url?.absoluteString {
+      BrowserHistory.shared.add(url: url)
+    }
+    
     webView.evaluateJavaScript(jsCode, completionHandler: nil)
   }
 }

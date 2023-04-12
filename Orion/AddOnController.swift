@@ -131,14 +131,13 @@ extension AddOnController: WKScriptMessageHandler {
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
     
     if message.name == "getMostVisitedSites" {
-      getMostVisitedSites { topSites in
-        let topSitesJson = try? JSONSerialization.data(withJSONObject: topSites, options: [])
-        let topSitesJsonString = String(data: topSitesJson!, encoding: .utf8)
-        let javascript = "logTopSites(\(topSitesJsonString ?? "[]"))"
-        self.webView.evaluateJavaScript(javascript) { _, err in
-          if let err = err {
-            print(err) 
-          }
+      let topSites = getMostVisitedSites()
+      let topSitesJson = try? JSONSerialization.data(withJSONObject: topSites, options: [])
+      let topSitesJsonString = String(data: topSitesJson!, encoding: .utf8)
+      let javascript = "logTopSites(\(topSitesJsonString ?? "[]"))"
+      self.webView.evaluateJavaScript(javascript) { _, err in
+        if let err = err {
+          print(err)
         }
       }
     }
@@ -151,21 +150,8 @@ extension AddOnController {
     dismiss(animated: true)
   }
   
-  func getMostVisitedSites(completion: @escaping ([[String: String]]) -> Void) {
-    WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
-      var counts = [String: Int]()
-      
-      for record in records where record.dataTypes.contains(WKWebsiteDataTypeCookies) {
-        let url = record.displayName
-        counts[url, default: 0] += 1
-      }
-      
-      let topCounts = counts.sorted(by: { $0.value > $1.value }).prefix(10)
-      let urls = topCounts.compactMap {
-        ["url": "http://\($0.key)", "title": "http://\($0.key)"]
-      }
-      completion(urls)
-    }
+  func getMostVisitedSites() -> [[String: String]] {
+    return BrowserHistory.shared.getTopVisitedUrls()
   }
 }
 
