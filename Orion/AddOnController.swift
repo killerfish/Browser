@@ -12,6 +12,7 @@ import Zip
 class AddOnController: UIViewController {
   private var webView: WKWebView!
   private var addOnPath: URL!
+  var unzipDirectory: URL!
   
   var webConfig: WKWebViewConfiguration {
     get {
@@ -88,7 +89,9 @@ class AddOnController: UIViewController {
   
   func loadAddOn() {
     do {
-      let unzipDirectory = try Zip.quickUnzipFile(addOnPath)
+      unzipDirectory = try Zip.quickUnzipFile(addOnPath)
+      WebServer.shared.unzipDirectory = unzipDirectory
+      
       let path = unzipDirectory.appendingPathComponent("manifest.json")
       var popPath: String!
       
@@ -105,9 +108,8 @@ class AddOnController: UIViewController {
           
           let htmlPath = unzipDirectory.appendingPathComponent(popPath)
           let htmlString = try! String(contentsOf: htmlPath, encoding: .utf8)
-          let newHTML = htmlString.replacingOccurrences(of: "\"/popup/", with: "\"")
-          
-          webView.loadHTMLString(newHTML, baseURL: htmlPath.deletingLastPathComponent())
+          let baseURL = URL(string: "http://localhost:8080")!
+          webView.loadHTMLString(htmlString, baseURL: baseURL)
         }
       } catch {
         print("Error reading manifest file: \(error.localizedDescription)")

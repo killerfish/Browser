@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1868621D29E70712001E3B4E /* BrowserHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1868621C29E70712001E3B4E /* BrowserHistory.swift */; };
+		1868622029E72797001E3B4E /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 1868621F29E72797001E3B4E /* Swifter */; };
+		1868622229E736CB001E3B4E /* WebServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1868622129E736CB001E3B4E /* WebServer.swift */; };
 		189887F929DBF3C300E60ECE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189887F829DBF3C300E60ECE /* AppDelegate.swift */; };
 		189887FB29DBF3C300E60ECE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189887FA29DBF3C300E60ECE /* SceneDelegate.swift */; };
 		1898880229DBF3C400E60ECE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1898880129DBF3C400E60ECE /* Assets.xcassets */; };
@@ -44,6 +47,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1868621C29E70712001E3B4E /* BrowserHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserHistory.swift; sourceTree = "<group>"; };
+		1868622129E736CB001E3B4E /* WebServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServer.swift; sourceTree = "<group>"; };
 		189887F529DBF3C300E60ECE /* Orion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Orion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		189887F829DBF3C300E60ECE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		189887FA29DBF3C300E60ECE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +77,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1898883B29DF23D800E60ECE /* Zip in Frameworks */,
+				1868622029E72797001E3B4E /* Swifter in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,6 +132,8 @@
 				1898882A29DDF40600E60ECE /* WebViewController.swift */,
 				1898883529DDF62300E60ECE /* URLInputAccessoryView.swift */,
 				18B8C31F29E017160050981A /* AddOnController.swift */,
+				1868621C29E70712001E3B4E /* BrowserHistory.swift */,
+				1868622129E736CB001E3B4E /* WebServer.swift */,
 			);
 			path = Orion;
 			sourceTree = "<group>";
@@ -176,6 +184,7 @@
 			name = Orion;
 			packageProductDependencies = (
 				1898883A29DF23D800E60ECE /* Zip */,
+				1868621F29E72797001E3B4E /* Swifter */,
 			);
 			productName = Orion;
 			productReference = 189887F529DBF3C300E60ECE /* Orion.app */;
@@ -251,6 +260,7 @@
 			mainGroup = 189887EC29DBF3C300E60ECE;
 			packageReferences = (
 				1898883929DF23D800E60ECE /* XCRemoteSwiftPackageReference "Zip" */,
+				1868621E29E72797001E3B4E /* XCRemoteSwiftPackageReference "swifter" */,
 			);
 			productRefGroup = 189887F629DBF3C300E60ECE /* Products */;
 			projectDirPath = "";
@@ -295,9 +305,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1898882929DBF5A200E60ECE /* BrowserViewController.swift in Sources */,
+				1868621D29E70712001E3B4E /* BrowserHistory.swift in Sources */,
 				1898883429DDF54100E60ECE /* UITextFieldExtension.swift in Sources */,
 				189887F929DBF3C300E60ECE /* AppDelegate.swift in Sources */,
 				1898882D29DDF44C00E60ECE /* WebPageTabController.swift in Sources */,
+				1868622229E736CB001E3B4E /* WebServer.swift in Sources */,
 				189887FB29DBF3C300E60ECE /* SceneDelegate.swift in Sources */,
 				1898883629DDF62300E60ECE /* URLInputAccessoryView.swift in Sources */,
 				1898883229DDF51800E60ECE /* WkWebViewExtension.swift in Sources */,
@@ -644,6 +656,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1868621E29E72797001E3B4E /* XCRemoteSwiftPackageReference "swifter" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/httpswift/swifter";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		1898883929DF23D800E60ECE /* XCRemoteSwiftPackageReference "Zip" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/marmelroy/Zip";
@@ -655,6 +675,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1868621F29E72797001E3B4E /* Swifter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1868621E29E72797001E3B4E /* XCRemoteSwiftPackageReference "swifter" */;
+			productName = Swifter;
+		};
 		1898883A29DF23D800E60ECE /* Zip */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1898883929DF23D800E60ECE /* XCRemoteSwiftPackageReference "Zip" */;
