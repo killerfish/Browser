@@ -17,11 +17,35 @@ class AddOnController: UIViewController {
     get {
       let config = WKWebViewConfiguration()
       let userController = WKUserContentController()
+      let userScript = getUserScript()
+      
       userController.add(self, name: "getMostVisitedSites")
+      userController.addUserScript(userScript)
       config.userContentController = userController;
 
       return config
     }
+  }
+  
+  private func getUserScript() -> WKUserScript {
+    let scriptSource = """
+      function logTopSites(topSitesArray) {
+        return new Promise(function(resolve, reject) {
+          resolve(topSitesArray);
+        });
+      }
+      
+      window.browser = {
+        topSites: {
+          get: function() {
+            window.webkit.messageHandlers.getMostVisitedSites.postMessage(null);
+            return logTopSites(arguments[0]);
+          }
+        }
+      };
+    """
+    let script = WKUserScript(source: scriptSource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+    return script
   }
   
   convenience init(addOnPath: URL) {
@@ -82,16 +106,6 @@ class AddOnController: UIViewController {
           let htmlPath = unzipDirectory.appendingPathComponent(popPath)
           let htmlString = try! String(contentsOf: htmlPath, encoding: .utf8)
           let newHTML = htmlString.replacingOccurrences(of: "\"/popup/", with: "\"")
-
-          let jsPath = unzipDirectory.appendingPathComponent("popup/panel.js")
-          let jsScript = try! String(contentsOf: jsPath, encoding: .utf8)
-          let modifiedScript = jsScript.replacingOccurrences(of: "var gettingTopSites = browser.topSites.get()", with: "window.webkit.messageHandlers.getMostVisitedSites.postMessage(null);")
-
-          do {
-            try modifiedScript.write(to: jsPath, atomically: true, encoding: .utf8)
-          } catch {
-            print("Error modifiying js script")
-          }
           
           webView.loadHTMLString(newHTML, baseURL: htmlPath.deletingLastPathComponent())
         }
