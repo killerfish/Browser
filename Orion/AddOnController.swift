@@ -19,6 +19,8 @@ class AddOnController: UIViewController {
       let config = WKWebViewConfiguration()
       let userController = WKUserContentController()
       let userScript = getUserScript()
+          
+      config.setURLSchemeHandler(self, forURLScheme: "customscheme")
       
       userController.add(self, name: "getMostVisitedSites")
       userController.addUserScript(userScript)
@@ -90,7 +92,6 @@ class AddOnController: UIViewController {
   func loadAddOn() {
     do {
       unzipDirectory = try Zip.quickUnzipFile(addOnPath)
-      WebServer.shared.unzipDirectory = unzipDirectory
       
       let path = unzipDirectory.appendingPathComponent("manifest.json")
       var popPath: String!
@@ -107,9 +108,9 @@ class AddOnController: UIViewController {
           }
           
           let htmlPath = unzipDirectory.appendingPathComponent(popPath)
-          let htmlString = try! String(contentsOf: htmlPath, encoding: .utf8)
-          let baseURL = URL(string: "http://localhost:8080")!
-          webView.loadHTMLString(htmlString, baseURL: baseURL)
+          let url = URL(string: "customscheme://\(htmlPath)")!
+          let request = URLRequest(url: url)
+          webView.load(request)
         }
       } catch {
         print("Error reading manifest file: \(error.localizedDescription)")
@@ -154,4 +155,46 @@ extension AddOnController {
     return BrowserHistory.shared.getTopVisitedUrls()
   }
 }
+
+extension AddOnController: WKURLSchemeHandler {
+  func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
+    guard let url = urlSchemeTask.request.url else {
+      return
+    }
+    
+    var path = url.path
+    let pathExtension = url.pathExtension
+    
+    if pathExtension == "js" || pathExtension == "css" {
+      path = unzipDirectory.relativePath + path
+    }
+    
+    let localFileUrl = URL(fileURLWithPath: path)
+    if let data = try? Data(contentsOf: localFileUrl) {
+      let mimeType = getMimeType(pathExtension)
+      let response = URLResponse(url: url, mimeType: mimeType, expectedContentLength: data.count, textEncodingName: "utf-8")
+      urlSchemeTask.didReceive(response)
+      urlSchemeTask.didReceive(data)
+      urlSchemeTask.didFinish()
+    }
+  }
+  
+  func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {}
+  
+  func getMimeType(_ pathExtension: String) -> String {
+    switch pathExtension {
+    case "html":
+      return "text/html"
+    case "js":
+      return "application/javascript"
+    case "css":
+      return "text/css"
+    default:
+      return ""
+    }
+  }
+}
+
+
+
 
