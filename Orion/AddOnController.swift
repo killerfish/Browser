@@ -32,17 +32,16 @@ class AddOnController: UIViewController {
   
   private func getUserScript() -> WKUserScript {
     let scriptSource = """
-      function logTopSites(topSitesArray) {
-        return new Promise(function(resolve, reject) {
-          resolve(topSitesArray);
-        });
-      }
-      
       window.browser = {
         topSites: {
           get: function() {
-            window.webkit.messageHandlers.getMostVisitedSites.postMessage(null);
-            return logTopSites(arguments[0]);
+            return new Promise(function(resolve, reject) {
+              window.webkit.messageHandlers.getMostVisitedSites.postMessage(null);
+              window.tempFunction = function(jsonString) {
+                delete window.tempFunction;
+                resolve(jsonString);
+              };
+            });
           }
         }
       };
@@ -135,7 +134,7 @@ extension AddOnController: WKScriptMessageHandler {
       let topSites = getMostVisitedSites()
       let topSitesJson = try? JSONSerialization.data(withJSONObject: topSites, options: [])
       let topSitesJsonString = String(data: topSitesJson!, encoding: .utf8)
-      let javascript = "logTopSites(\(topSitesJsonString ?? "[]"))"
+      let javascript = "tempFunction(\(topSitesJsonString ?? "[]"))"
       self.webView.evaluateJavaScript(javascript) { _, err in
         if let err = err {
           print(err)
