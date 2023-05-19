@@ -14,6 +14,7 @@ class BrowserViewController: UIViewController {
   var addTabButton: UIBarButtonItem!
   var closeTabButton: UIBarButtonItem!
   var addOnsButton: UIBarButtonItem!
+  var moreOptionsButton: UIBarButtonItem!
   var toolbar: UIToolbar!
   var addOnPath: URL!
   
@@ -35,26 +36,30 @@ class BrowserViewController: UIViewController {
   }
   
   func makeToolBarButtons() {
-    let backButtonImage = UIImage(systemName: "chevron.left")
+    let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .thin)
+    let backButtonImage = UIImage(systemName: "chevron.left", withConfiguration: config)
     backButton = UIBarButtonItem(image: backButtonImage, style: .plain, target: self, action: #selector(backButtonPressed))
     backButton.isEnabled = false
     backButton.width = 50
     
-    let addTabButtonImage = UIImage(systemName: "plus")
+    let addTabButtonImage = UIImage(systemName: "plus", withConfiguration: config)
     addTabButton = UIBarButtonItem(image: addTabButtonImage, style: .plain, target: self, action: #selector(addTabButtonPressed))
     
-    let closeTabButtonImage = UIImage(systemName: "xmark")
+    let closeTabButtonImage = UIImage(systemName: "xmark", withConfiguration: config)
     closeTabButton = UIBarButtonItem(image: closeTabButtonImage, style: .plain, target: self, action: #selector(closeTabButtonPressed))
 
-    let addOnsButtonImage = UIImage(systemName: "paperclip")
+    let addOnsButtonImage = UIImage(systemName: "paperclip", withConfiguration: config)
     addOnsButton = UIBarButtonItem(image: addOnsButtonImage, style: .plain, target: self, action: #selector(addOnsButtonPressed))
     addOnsButton.isEnabled = false
     
+    let moreOptionsButtonImage = UIImage(systemName: "line.3.horizontal.circle", withConfiguration: config)
+    moreOptionsButton = UIBarButtonItem(image: moreOptionsButtonImage, style: .plain, target: self, action: #selector(settingsButtonPressed))
+    
     let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     let fixedSpace = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-    fixedSpace.width = 25
+    fixedSpace.width = 10
     
-    let toolbarButtonItems = [fixedSpace, backButton!, flexibleSpace, closeTabButton!, flexibleSpace, addTabButton!, flexibleSpace, addOnsButton!, fixedSpace]
+    let toolbarButtonItems = [fixedSpace, backButton!, flexibleSpace, closeTabButton!, flexibleSpace, addTabButton!, flexibleSpace, addOnsButton!, flexibleSpace, moreOptionsButton!, fixedSpace]
     toolbar.items = toolbarButtonItems
   }
   
@@ -112,6 +117,9 @@ extension BrowserViewController {
     let addOnNavController = UINavigationController(rootViewController: addOnController)
     present(addOnNavController, animated: true)
   }
+  
+  @objc
+  func settingsButtonPressed() { }
 }
 
 extension BrowserViewController {
